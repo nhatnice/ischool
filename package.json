@@ -1,0 +1,22 @@
+{
+  "name": "minhducschool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "postinstall": "electron-rebuild -w keytar -p -f && electron-builder install-app-deps --arch=ia32",
+    "pack": "asar pack . ~/app.asar"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^6.0.7"
+  },
+  "devDependencies": {
+    "bindings": "^1.5.0",
+    "electron-rebuild": "^1.8.5",
+    "ewc": "0.0.1"
+  }
+}

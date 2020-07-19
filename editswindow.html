@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2018 Lavensoft + MinhDucSchool -->
+<html>
+  <head>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/materialize.css" />
+    <script type="text/javascript" src="./js/hamer.min.js"></script>
+  <script src="./js/materialize.min.js" type="text/javascript"></script>
+    <script>window.$ = window.jQuery = require('./js/jquery-3.3.1.min.js')</script>
+    <script src="./js/jquery-ui.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="./js/script.js"></script>
+    <script type="text/javascript" src="./js/sidebar.js"></script>
+  </head>
+  <body style="margin:0;font-family: 'Roboto', sans-serif;background-color:#fff;overflow:hidden;">
+    <div class="title-bar" class="title-bar"></div>
+    <div style="width:100%;text-align:center;margin-top:30px;">
+      <h5 style="font-weight:400;font-size:1.75rem;">Chỉnh sửa học sinh</h5>
+    </div>
+    <form id="forme" name="formedits" class="cform">
+
+    </form>
+    <script>
+    var dts;
+    var idss;
+    const electron = require('electron');
+    const storage = require('electron-storage');
+    const currentWindow = electron.remote.getCurrentWindow();
+    electron.ipcRenderer.on('ping', (event, ids) => {
+      filePath = "./database.json";
+      idss = ids;
+      storage.get(filePath, (err, data) => {
+      if (err) {
+        console.error(err)
+      } else {
+        var htedit = '<div class="avatar" id="infor" style="float:left;width:20%">'
++'          <div class="cform-avatar" id="cform-avatar">'
++'            <img  class="cform-image" id="cform-image" src="'+process.env.APPDATA+data[ids].image+'"/>'
++'            <a onclick="upfile()" id="upfile" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">camera_alt</i></a>'
++'          </div>'
++'        </div>'
++'<div id="left" style="float:left;width:37.5%;padding:10px;margin-top:-20px;">'
++''
++'  <div class="input-field col s12">'
++'      <i class="material-icons prefix">account_circle</i>'
++'      <input id="icon_prefix" name="hoten" value="'+data[ids].name+'" type="text" class="validate" />'
++'      <label for="icon_prefix" class="active">Họ Tên Học Sinh</label>'
++'    </div>'
++''
++'    <div class="input-field col s12">'
++'        <i class="material-icons prefix">&#xE86F;</i>'
++'        <input id="icon_prefix" name="maso" value="'+data[ids].codes+'" type="text" class="validate" />'
++'        <label for="icon_prefix" class="active">Mã Số</label>'
++'      </div>'
++''
++'      <div class="input-field col s12">'
+  +'        <i class="material-icons prefix">&#xE86E;</i>'
+  +'        <input id="icon_prefix" name="lop" value="'+data[ids].lops+'" type="text" class="validate" />'
+  +'        <label for="icon_prefix" class="active">Lớp</label>'
+  +'      </div>'
++'  <div class="input-field col s12">'
++'      <i class="material-icons prefix">&#xE916;</i>'
++'      <input name="sinhnhat" type="text" value="'+data[ids].ngaysinh+'" class="datepicker" id="datepicker">'
++'      <label for="icon_prefix"></label>'
++'    </div>'
++'    <div class="input-field col s12">'
++'      <i class="material-icons prefix">&#xE0C8;</i>'
++'      <input id="icon_prefix" name="noisinh" value="'+data[ids].noisinhs+'" type="text" class="validate">'
++'      <label for="icon_prefix" class="active">Nơi Sinh</label>'
++'    </div>'
++'    <div style="margin-top:25px;margin-bottom:31px;"> '
++'      <i class="material-icons prefix" style="float:left;position:absolute;font-size:2rem;margin-top:-4px;color: #777676">supervised_user_circle</i> '
++'      <select style="width:calc(100% - 43px);margin-left:43px;margin-top:7px;float:left;margin-top:-9px" name="gioitinh">'
++'        <option value="'+data[ids].gioitinh+'" disabled selected>Giới Tính</option>'
++'        <option value="1">Nam</option>'
++'        <option value="2">Nữ</option>'
++'    </select>'
++'    </div></br></br>'
++'  <div class="input-field col s12">'
++'      <i class="material-icons prefix">filter_vintage</i>'
++'      <input id="icon_prefix" name="tongiao" type="text" class="validate" value="'+data[ids].tongiaos+'">'
++'      <label for="icon_prefix" class="active">Tôn Giáo</label>'
++'    </div>'
++'</div>'
++'<div id="right" style="float:left;width:37.5%;margin-top:-20px;padding:10px;">'
++'<div class="input-field col s12">'
++'<i class="material-icons prefix">&#xE90D;</i>'
++'<input id="icon_prefix" name="dantoc" type="text" class="validate" value="'+data[ids].dantoc+'">'
++'<label for="icon_prefix" class="active">Dân Tộc</label>'
++'</div>'
++'<div class="input-field col s12">'
++'  <i class="material-icons prefix">&#xE88A;</i>'
++'  <input id="icon_prefix" name="noio" type="text" class="validate" value="'+data[ids].diachi+'"> '
++'  <label for="icon_prefix" class="active">Nơi Ở</label>'
++'</div>'
++'<div class="input-field col s12">'
++'    <i class="material-icons prefix">&#xE84F;</i>'
++'    <input id="icon_prefix" name="quequan" type="text" class="validate" value="'+data[ids].country+'">'
++'    <label for="icon_prefix" class="active">Quê Quán</label>'
++'  </div>'
++'  <div class="input-field col s12">'
++'      <i class="material-icons prefix">account_circle</i>'
++'      <input id="icon_prefix" name="hotenphuhuynh" type="text" class="validate" value="'+data[ids].fnames+'">'
++'      <label for="icon_prefix" class="active">Họ Tên Phụ Huynh</label>'
++'    </div>'
++'    <div class="input-field col s12">'
++'      <i class="material-icons prefix">&#xE0B0;</i>'
++'      <input id="icon_prefix" name="sdtphuhuynh" type="text" class="validate" value="'+data[ids].fnums+'">'
++'      <label for="icon_prefix" class="active">SĐT Của Phụ Huynh</label>'
++'    </div>'
++'    <div class="input-field col s12">'
++'        <i class="material-icons prefix">note</i>'
++'         <textarea style="height: 55px" id="textarea1" name="ghichu" class="materialize-textarea">'+data[ids].notes+'</textarea>'
++'        <label for="icon_prefix" class="active">Ghi Chú</label>'
++'      </div>'
++'      <div style="width:100%;margin:auto;height:65px;">'
+  +'    <a class="btn waves-effect waves-light" id="submit" onclick="subs()" style="float:right">Áp Dụng'
++'        <i class="material-icons right">send</i>'
++'      </a>'
++'      <button  class="btn waves-effect waves-light" onclick="cancels()" id="cancel" style="float:right;margin-right:10px;background-color:#ee6e73">Hủy'
++'        <i class="material-icons right" >close</i>'
++'      </button>'
+
+        var htedits = "<div style='text-align:center;padding-bottom:10px;'>"
++"          <h4>Chỉnh sửa</h4>"
++"        </div>"
++"        <div class='input-field col s12'>"
++"            <i class='material-icons prefix'>account_circle</i>"
++"            <input id='icon_prefix' name='names' type='text' value='"+data[ids].name+"' class='validate' />"
++"            <label for='icon_prefix' class='active'>Họ Tên Học Sinh</label>"
++"          </div>"
++"          <div class='input-field col s12'>"
++"              <i class='material-icons prefix'>&#xE86F;</i>"
++"              <input id='icon_prefix' name='code' type='text' value='"+data[ids].codes+"' class='validate' />"
++"              <label for='icon_prefix' class='active'>Mã Số</label>"
++"            </div>"
++"            <div class='input-field col s12'>"
++"                <i class='material-icons prefix'>&#xE86E;</i>"
++"                <input id='icon_prefix' name='class' type='text' value='"+data[ids].lops+"' class='validate' />"
++"                <label for='icon_prefix' class='active'>Lớp</label>"
++"              </div>"
++"            <div class='input-field col s12'>"
++"                <i class='material-icons prefix'>&#xE916;</i>"
++"                <input id='icon_prefix' name='birthday' type='date' value='"+data[ids].ngaysinh+"' class='validate'>"
++"                <label for='icon_prefix' class='active'></label>"
++"              </div>"
++"              <div class='input-field col s12'>"
++"                <i class='material-icons prefix'>&#xE0C8;</i>"
++"                <input id='icon_prefix' name='noisinh' type='text' value='"+data[ids].noisinhs+"' class='validate'>"
++"                <label for='icon_prefix' class='active'>Nơi Sinh</label>"
++"              </div>"
++"              <select name='gt' class='browser-default'>"
++"                  <option value='"+data[ids].gioitinh+"' disabled selected>Giới Tính</option>"
++"                    <option value='1'>Nam</option>"
++"                    <option value='2'>Nữ</option>"
++"                  </select>"
++"                  <div class='input-field col s12'>"
++"                      <i class='material-icons prefix'>filter_vintage</i>"
++"                      <input id='icon_prefix' name='tongiao' type='text' value='"+data[ids].tongiaos+"' class='validate'>"
++"                      <label for='icon_prefix' class='active'>Tôn Giáo</label>"
++"                    </div>"
++"                    <div class='input-field col s12'>"
++"                        <i class='material-icons prefix'>&#xE90D;</i>"
++"                        <input id='icon_prefix' name='dtoc' type='text' value='"+data[ids].dantoc+"' class='validate'>"
++"                        <label for='icon_prefix' class='active'>Dân Tộc</label>"
++"                      </div>"
++"                    <div class='input-field col s12'>"
++"                        <i class='material-icons prefix'>&#xE88A;</i>"
++"                        <input id='icon_prefix' name='home' type='text' value='"+data[ids].diachi+"' class='validate'>"
++"                        <label for='icon_prefix' class='active'>Nơi Ở</label>"
++"                      </div>"
++"                      <div class='input-field col s12'>"
++"                          <i class='material-icons prefix'>&#xE84F;</i>"
++"                          <input id='icon_prefix' name='quequan' value='"+data[ids].country+"' type='text' class='validate'>"
++"                          <label for='icon_prefix' class='active'>Quê Quán</label>"
++"                        </div>"
++"                  <div class='input-field col s12'>"
++"                      <i class='material-icons prefix'>account_circle</i>"
++"                      <input id='icon_prefix' name='fname' type='text' value='"+data[ids].fnames+"' class='validate'>"
++"                      <label for='icon_prefix' class='active'>Họ Tên Phụ Huynh</label>"
++"                    </div>"
++"                    <div class='input-field col s12'>"
++"                      <i class='material-icons prefix'>&#xE0B0;</i>"
++"                      <input id='icon_prefix' name='fnum' type='text' value='"+data[ids].fnums+"' class='validate'>"
++"                      <label for='icon_prefix' class='active'>SĐT Của Phụ Huynh</label>"
++"                    </div>"
++"                        <div class='input-field col s12'>"
++"                            <i class='material-icons prefix'>note</i>"
++"                             <textarea id='textarea1' name='note'  class='materialize-textarea' style='height: 55px;'>"+data[ids].notes+"</textarea>"
++"                            <label for='icon_prefix' class='active'>Ghi Chú</label>"
++"                          </div>"
++"                        <div class='input-field col s12'>"
++"                        <div style='width:100%;margin:auto;height:65px;'>"
++"                        <a class='btn waves-effect waves-light' onclick='subs()' style='float:right'>Áp Dụng"
++"                          <i class='material-icons right'>send</i>"
++"                        </a>"
++"                        <button  class='btn waves-effect waves-light' onclick='cancel()' style='float:right;margin-right:10px;background-color:#ee6e73'>Hủy"
++"                          <i class='material-icons right' >close</i>"
++"                        </button>"
++"                      </div>"
+  $("#forme").append(htedit);
+  $( function() {
+    //LOAD DATE PICKER SINH NHAT
+    $( "#datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+    //LOAD SELECT BOX GIOI TINH
+    $(document).ready(function(){
+      $('select').formSelect();
+    });
+  });
+
+
+
+dts = data;
+      }
+    });
+  });
+  const remote = require('electron').remote;
+  function cancels(){
+    var window = remote.getCurrentWindow();
+    window.close();
+  };
+  //ADD IMAGE
+  var image;
+  function upfile(){
+    const {dialog} = require('electron').remote
+    const path = require('path')
+    const fsx = require('fs-extra');
+    dialog.showOpenDialog({
+      filters: [
+                  { name: '*',
+                    extensions: ['png','jpg']
+                  }
+                ]}, function (fileName) {
+                  fsx.copy(fileName[0],process.env.APPDATA + "/minhducschool/database/image/"+path.basename(fileName[0]), err => {
+                    if (err) return console.error(err)
+                    console.log(fileName);
+                    $("#content").load("./student.html");
+                    image = "/minhducschool/database/image/"+path.basename(fileName[0]);
+                    $("#cform-image").attr("src",process.env.APPDATA+image);
+                    })
+                  });
+      };
+      //SUBMIT AND SAVE
+      function subs(){
+        //var nsame, lop, birthday, code, noisinh, gt, tongiao, dtoc, home, quequan, fnam,fnum, fjob, mname, mnum, mjob = "";
+        console.log("subclick");
+        var names = document.forms["formedits"]["hoten"].value;
+        var code = document.forms["formedits"]["maso"].value;
+        var lop = document.forms["formedits"]["lop"].value;
+        var birthday = document.forms["formedits"]["sinhnhat"].value;
+        var noisinh = document.forms["formedits"]["noisinh"].value;
+        var gt = document.forms["formedits"]["gioitinh"].value;
+        var tongiao = document.forms["formedits"]["tongiao"].value;
+        var dtoc = document.forms["formedits"]["dantoc"].value;
+        var home = document.forms["formedits"]["noio"].value;
+        var quequan = document.forms["formedits"]["quequan"].value;
+        var fname = document.forms["formedits"]["hotenphuhuynh"].value;
+        var fnum = document.forms["formedits"]["sdtphuhuynh"].value;
+        var note = document.forms["formedits"]["ghichu"].value;
+    //    var minNumber = 100000;
+    //    var maxNumber = 999999;
+    //    var rand = Math.floor(Math.random()*(max-min+1)+min);
+    //CHECK IF IMAGE NULL
+    if(image == null){
+      image = dts[idss].image;
+    }
+
+    dts[idss].name = names;
+    dts[idss].codes = code;
+    dts[idss].lops = lop;
+    dts[idss].ngaysinh = birthday;
+    dts[idss].noisinhs = noisinh;
+    dts[idss].gioitinh = gt;
+    dts[idss].tongiaos = tongiao;
+    dts[idss].dantoc = dtoc;
+    dts[idss].diachi = home;
+    dts[idss].country = quequan;
+    dts[idss].fnames = fname;
+    dts[idss].fnums = fnum;
+    dts[idss].notes = note;
+    dts[idss].image = image;
+      var path = require("path");
+      var filePath = "./database.json";
+          storage.set(filePath, dts)
+            .then(data => {
+              console.log(image);
+              console.log(dts);
+              window.close();
+            })
+            .catch(err => {
+              console.error(err);
+            });
+
+
+        };
+    </script>
+  </body>
+</html>

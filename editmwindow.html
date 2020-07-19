@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2018 Lavensoft + MinhDucSchool -->
+<html>
+  <head>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/materialize.css" />
+    <script type="text/javascript" src="./js/hamer.min.js"></script>
+  <script src="./js/materialize.min.js" type="text/javascript"></script>
+    <script>window.$ = window.jQuery = require('./js/jquery-3.3.1.min.js')</script>
+    <script src="./js/jquery-ui.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="./js/script.js"></script>
+    <script type="text/javascript" src="./js/sidebar.js"></script>
+  </head>
+  <body style="margin:0;font-family: 'Roboto', sans-serif;background-color:#fff">
+    <form id="forme" name="formedits" class="cform">
+
+    </form>
+    <script>
+    var dts;
+    var idss;
+    const electron = require('electron');
+    const storage = require('electron-storage');
+    const currentWindow = electron.remote.getCurrentWindow();
+    electron.ipcRenderer.on('ping', (event, ids) => {
+      filePath = "./kkdata.json";
+      idss = ids;
+      storage.get(filePath, (err, data) => {
+      if (err) {
+        console.error(err)
+      } else {
+        var htedit = '  <div class="input-field col s12">'
++'              <i class="material-icons prefix">account_circle</i>'
++'              <input id="icon_prefix" name="names" value="'+data[ids].name+'" type="text" class="validate" />'
++'              <label for="icon_prefix" class="active">Họ Tên Học Sinh</label>'
++'            </div>'
++'              <div class="input-field col s12">'
++'                  <i class="material-icons prefix">&#xE86E;</i>'
++'                  <input id="icon_prefix" value="'+data[ids].lops+'" name="class" type="text" class="validate" />'
++'                  <label for="icon_prefix" class="active">Lớp</label>'
++'                </div>'
++'              <div class="input-field col s12">'
++'                  <i class="material-icons prefix">&#xE916;</i>'
++'                  <input id="icon_prefix" value="'+data[ids].ngaysinh+'" name="birthday" type="date" class="validate">'
++'                  <label for="icon_prefix" class="active"></label>'
++'                </div>'
++'                <div class="input-field col s12">'
++'                  <i class="material-icons prefix">attach_money</i>'
++'                  <input id="icon_prefix" value="'+data[ids].hocphis+'" name="hocphi" type="text" class="validate">'
++'                  <label for="icon_prefix" class="active">Học Phí</label>'
++'                </div>'
++'                    <div class="input-field col s12">'
++'                        <i class="material-icons prefix">cake</i>'
++'                        <input id="icon_prefix" value="'+data[ids].ans+'" name="an" type="text" class="validate">'
++'                        <label for="icon_prefix" class="active">Tiền Ăn</label>'
++'                      </div>'
++'                      <div class="input-field col s12">'
++'                          <i class="material-icons prefix">call_made</i>'
++'                          <input id="icon_prefix" value="'+data[ids].khoangkhacs+'"  name="khoangkhac" type="text" class="validate">'
++'                          <label for="icon_prefix" class="active">Khoản Khác</label>'
++'                        </div>'
++'                          <div class="input-field col s12">'
++'                              <i class="material-icons prefix">note</i>'
++'                               <textarea id="textarea1"  name="note" class="materialize-textarea">'+data[ids].notes+'</textarea>'
++'                              <label for="icon_prefix" class="active">Ghi Chú</label>'
++'                          </div>'
++'                            <select name="gt" class="browser-default">'
++'                                <option value="" disabled selected>Tình Trạng</option>'
++'                                  <option value="1">Đã Thu</option>'
++'                                  <option value="2">Chưa Thu</option>'
++'                                </select>'
++'                          <div class="input-field col s12">'
++'                          <div style="width:100%;margin:auto;height:65px;">'
++'                          <a class="btn waves-effect waves-light" onclick="subs()" id="submit" style="float:right">Áp Dụng'
++'                            <i class="material-icons right">send</i>'
++'                          </a>'
++'<button  class="btn waves-effect waves-light" onclick="cancel()" style="float:right;margin-right:10px;background-color:#ee6e73">Hủy'
++'  <i class="material-icons right" >close</i>'
++'</button>'
++'</div>'
+  $("#forme").append(htedit);
+dts = data;
+      }
+    });
+  });
+
+  const remote = require('electron').remote;
+  function cancel(){
+    var window = remote.getCurrentWindow();
+    window.close();
+  };
+      function subs(){
+        //var nsame, lop, birthday, code, noisinh, gt, tongiao, dtoc, home, quequan, fnam,fnum, fjob, mname, mnum, mjob = "";
+        console.log("subclick");
+        var names = document.forms["formedits"]["names"].value;
+        var lop = document.forms["formedits"]["class"].value;
+        var birthday = document.forms["formedits"]["birthday"].value;
+        var hocphi = document.forms["formedits"]["hocphi"].value;
+        var an = document.forms["formedits"]["an"].value;
+        var khoangkhac = document.forms["formedits"]["khoangkhac"].value;
+        var note = document.forms["formedits"]["note"].value;
+        var gt = document.forms["formedits"]["gt"].value;
+    //    var minNumber = 100000;
+    //    var maxNumber = 999999;
+    //    var rand = Math.floor(Math.random()*(max-min+1)+min);
+    dts[idss].name = names;
+    dts[idss].lops = lop;
+    dts[idss].ngaysinh = birthday;
+    dts[idss].hocphis = hocphi;
+    dts[idss].ans = an;
+    dts[idss].khoangkhacs = khoangkhac;
+    dts[idss].notes = note;
+    dts[idss].gts = gt;
+      var path = require("path");
+      var filePath = "./kkdata.json";
+          storage.set(filePath, dts)
+            .then(data => {
+              console.log(dts);
+                  window.close();
+            })
+            .catch(err => {
+              console.error(err);
+            });
+
+
+        };
+    </script>
+  </body>
+</html>

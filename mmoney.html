@@ -1,0 +1,59 @@
+<form id="searchf" style="max-width:30%;padding-top:4px;float:right;padding-right:25px">
+  <div class="input-field col s6">
+        <i class="material-icons prefix" style="font-size:24px;margin-left:15px;">search</i>
+        <input id="myip" onkeyup="StFil()" type="text" class="validate" style="height:24px">
+      </div>
+</form>
+<div class="center-menu">
+  <button class="exbtn" id="addmm"><i style="font-size:22px" class="material-icons">&#xE145;</i></button>
+  <button class="exbtn" id="save"><i style="font-size:22px" class="material-icons">&#xE161;</i></button>
+  <button class="exbtn" id="open"><i style="font-size:22px" class="material-icons">folder_open</i></button>
+  <button class="exbtn" id="refresh"><i style="font-size:22px" class="material-icons">refresh</i></button>
+</div>
+<div class="left-menu">
+
+</div>
+<script>
+
+$("#save").click(function(){
+  const {dialog} = require('electron').remote
+  const fsx = require('fs-extra');
+  dialog.showSaveDialog({ filters: [
+     { name: '*', extensions: ['json'] }
+    ]}, function (fileName) {
+      fsx.copy(process.env.APPDATA + "/minhducschool/kkdata.json",fileName, err => {
+        if (err) return console.error(err)
+        console.log("save done!");
+      })
+  });
+});
+$("#open").click(function(){
+  const {dialog} = require('electron').remote
+  const fsx = require('fs-extra');
+  dialog.showOpenDialog({ filters: [
+     { name: '*', extensions: ['json'] }
+    ]}, function (fileName) {
+      fsx.copy(process.env.APPDATA + "/minhducschool/kkdata.json",process.env.APPDATA + "/minhducschool/stsdata.json.old", err => {
+        if (err) return console.error(err)
+        console.log('remove success!')
+})
+      fsx.copy(fileName[0],process.env.APPDATA + "/minhducschool/kkdata.json", err => {
+        if (err) return console.error(err)
+        console.log("done!");
+        $("#content").load("./money.html");
+      })
+});
+});
+  $("#refresh").click(function(){
+      $("#content").load("./money.html");
+  });
+  $("#addmm").click(function(){
+    const app = require('electron');
+    const BrowserWindow = app.remote.BrowserWindow;
+  let addmsWindow;
+    addmsWindow = new BrowserWindow({width: 400, height: 600,experimentalFeatures: true,vibrancy: 'dark'});
+    addmsWindow.loadURL('file://'+__dirname+'/addmsWindow.html');
+     addmsWindow.setAlwaysOnTop(true, "floating", 1);
+     addmsWindow.setVisibleOnAllWorkspaces(false);
+});
+</script>

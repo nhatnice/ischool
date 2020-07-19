@@ -1,0 +1,21 @@
+{
+  "name" : "default",
+  "ver" : "0.7.1",
+  "hash" : "",
+  "filename": [
+    {
+      "name" : "database.json",
+      "type" : "json",
+      "key" : "student"
+    },
+    {
+      "name" : "database.json.bak",
+      "type" : "bak",
+      "key" : "student"
+    },
+    {
+      "name" : "database",
+      "type" : "directory"
+    }
+  ]
+}

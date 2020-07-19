@@ -1,0 +1,119 @@
+<div style="width:100%;height:61px">
+
+</div>
+<script>
+$(document).scroll(function () {
+    var scl = $(this).scrollTop();
+    if (scl > 50) {
+        $("#namets").css({"width":$("#namet").css("width")});
+        $("#codets").css({"width":$("#codet").css("width")});
+        $("#classts").css({"width":$("#classt").css("width")});
+        $("#ngaysinhts").css({"width":$("#ngaysinht").css("width")});
+        $("#nsts").css({"width":$("#nst").css("width")});
+        $("#gtts").css({"width":$("#gtt").css("width")});
+        $("#tgts").css({"width":$("#tgt").css("width")});
+        $("#dtts").css({"width":$("#dtt").css("width")});
+        $("#nots").css({"width":$("#not").css("width")});
+        $("#qqts").css({"width":$("#qqt").css("width")});
+        $("#fnamts").css({"width":$("#fnamt").css("width")});
+        $("#fnumts").css({"width":$("#fnumt").css("width")});
+        $("#notets").css({"width":$("#notet").css("width")});
+        $("#notetss").css({"width":$("#noteta").css("width")});
+        $('.tabletl').fadeIn();
+    } else {
+        $('.tabletl').fadeOut();
+    }
+
+});</script>
+<div style="float:left;width:100%;height:32px;padding-left:10px;padding-top:5px;">
+  <i class="material-icons prefix" style="font-size:32px;float:left;margin:7.5px;color:#1d89cf">&#xE851;</i>
+  <h5 style="color:#1d89cf">Danh Sách Học Sinh</h5>
+</div>
+<div class="fcontent" id="fcontent" style="text-align:center;">
+
+  </div>
+
+  <script>
+  var datas;
+  filePath = "./database.json";
+  storage.get(filePath, (err, data) => {
+  if (err) {
+    console.error(err)
+  } else {
+    datas = data;
+    for(var i = 0; i<=datas.length; i++)
+    {
+  /*    var gts = data[i].gioitinh;
+      var htmls = "<tr id='tr"+i+"'>"
+      +"        <td>"+data[i].name+"</td>"
+      +"        <td>"+data[i].codes+"</td>"
+      +"        <td>"+data[i].lops+"</td>"
+      +"        <td>"+data[i].ngaysinh+"</td>"
+      +"        <td>"+data[i].noisinhs+"</td>"
+      +"        <td>"+gts+"</td>"
+      +"        <td>"+data[i].tongiaos+"</td>"
+      +"        <td>"+data[i].dantoc+"</td>"
+      +"        <td>"+data[i].diachi+"</td>"
+      +"        <td>"+data[i].country+"</td>"
+      +"        <td>"+data[i].fnames+"</td>"
+      +"        <td>"+data[i].fnums+"</td>"
+      +"        <td>"+data[i].notes+"</td>"
+      +"        <td ><div><button style='background-color:transparent;border:none;outline:none' onclick='editp("+i+")''><i class='material-icons prefix' style='font-size:18px;float:left;color:#1d89cf'>mode_edit</i></button><button style='background-color:transparent;border:none;outline:none;margin-left:10px;' onclick='deletea("+i+")''><i class='material-icons prefix' style='font-size:18px;float:left;color:#ee6e73'>delete</i></button></div></td>"
+      +"      </tr>"*/
+      showCard(process.env.APPDATA + data[i].image,data[i].name,data[i].lops,"bookmark_border","#fcontent",i);
+
+    }
+  }
+});
+
+function filter_array(arr) {
+    var index = -1,
+        arr_length = arr ? arr.length : 0,
+        resIndex = -1,
+        result = [];
+
+    while (++index < arr_length) {
+        var value = arr[index];
+
+        if (value) {
+            result[++resIndex] = value;
+        }
+    }
+
+    return result;
+}
+function deletea(index){
+  delete datas[index];
+  datas = filter_array(datas);
+  console.log(datas);
+  storage.set(filePath, datas)
+    .then(data => {
+      console.log(datas);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+    $("#content").load("./student.html");
+}
+
+function StFil() {
+var input, filter, table, tr, td, i;
+  input = document.getElementById("myip");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("tabls");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+  </script>
+</div>

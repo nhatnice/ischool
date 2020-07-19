@@ -1,0 +1,57 @@
+
+<div style="height:60px;width:100%;"></div>
+
+<div class="card-content">
+    <div class="scores-contain">
+      <div class="scores-image-contain">
+
+        </div>
+    </div>
+</div>
+
+<div style="text-align:center;padding:24px;">
+  <div class="card" style="margin:auto">
+    <table class="bordered highlight">
+        <thead>
+          <tr id = "table-m">
+              <th>Họ Tên</th>
+              <th>Lớp</th>
+              <th>Mã Số</th>
+
+          </tr>
+        </thead>
+
+        <tbody id="table-scores">
+
+        </tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      var html = "";
+      var tdHtml = "";
+      filePath = "./scores.json";
+      storage.get(filePath, (err, data) => {
+      if (err) {
+        console.error(err)
+      } else {
+        //LOAD TABLE MENU
+
+        for(var i = 0; i < data.subjects.length;i++){
+            html += "<th>"+ data.subjects[i] +"</th>";
+        }
+        $("#table-m").append(html);
+
+        //CREATE TD
+        for(i = 0;i<data.scores.length;i++){
+          tdHtml += "<tr id='" +i+ "'><td>"+data.scores[i].hoten+"</td>"+"<td>"+data.scores[i].lop+"</td>"+"<td>"+data.scores[i].code+"</td>";
+           for(x = 0; x<data.subjects.length;x++){
+              tdHtml += "<td>"+data.scores[i].diem[x]+"</td>";
+            }
+            tdHtml +="</tr>";
+          }
+          $("#table-scores").append(tdHtml);
+        //LOAD scores
+      }
+      });
+      </script>

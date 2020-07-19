@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+      <div class="fcontent" style="text-align:center;height:100%;width:100%;padding-left:20px;padding-right:20px;background-color:#fff ">
+        <div style="margin-top:5%;display:none;" id="imgw">
+          <img src="./resources/image/ico2.png" style="max-height:25%;max-width:25%" />
+        </div>
+        <div id="txtw" style="text-align:center;padding-top:5%;display:none;">
+          <h5 style="font-weight:300;font-size:36px">CHÀO MỪNG BẠN ĐÃ ĐẾN VỚI IMANAGER !</h5>
+        </div>
+        <div style="margin-top:70px">
+          <button id="btnw" class="btn">Bắt Đầu</button>
+        </div>
+    </div>
+    <script>
+      $(document).ready(function(){
+        $("#btnw").click(function(){
+          sidebarItem("student");
+        });
+        $("#imgw").fadeIn(1500);
+        $("#txtw").show(1500);
+      });
+    </script>
+  </body>
+</html>

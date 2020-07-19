@@ -1,0 +1,161 @@
+<div style="width:100%;height:61px">
+
+</div>
+<script>
+$(document).scroll(function () {
+    var scl = $(this).scrollTop();
+    if (scl > 50) {
+        $("#nametss").css({"width":$("#namets").css("width")});
+        $("#classtss").css({"width":$("#classts").css("width")});
+        $("#ngaysinhtss").css({"width":$("#ngaysinhts").css("width")});
+        $("#hocphis").css({"width":$("#hocphi").css("width")});
+        $("#ans").css({"width":$("#an").css("width")});
+        $("#kks").css({"width":$("#kk").css("width")});
+        $("#notetss").css({"width":$("#notets").css("width")});
+        $("#tts").css({"width":$("#tt").css("width")});
+        $("#notets").css({"width":$("#notet").css("width")});
+        $('.tabletl').fadeIn();
+    } else {
+        $('.tabletl').fadeOut();
+    }
+
+});</script>
+<div style="float:left;width:100%;height:32px;padding-left:10px;padding-top:5px;">
+  <i class="material-icons prefix" style="font-size:32px;float:left;margin:7.5px;color:#1d89cf">&#xE851;</i>
+  <h5 style="color:#1d89cf">Danh Sách Khoản Thu</h5>
+</div>
+<div class="fcontent" style="text-align:center;">
+
+  <div class="card" id="tablec" style="padding-left:10px;">
+    <div class="tabletl" id="tabletl">
+      <table>
+           <thead>
+             <tr>
+                 <th id="nametss">Họ & Tên</th>
+                 <th id="classtss">Lớp</th>
+                 <th id="ngaysinhtss">Ngày Sinh</th>
+                 <th id="hocphis">Học Phí</th>
+                 <th id="ans">Tiền Ăn</th>
+                 <th id="kks">Khoảng Khác</th>
+                 <th id="notetss">Ghi Chú</th>
+                 <th id="tts">Tình Trạng</th>
+                 <th id="notets">Chỉnh Sửa</th>
+             </tr>
+           </thead>
+      </table>
+    </div>
+    <table class="highlight responsive-table" id="tabls">
+         <thead>
+           <tr>
+             <th id="namets">Họ & Tên</th>
+             <th id="classts">Lớp</th>
+             <th id="ngaysinhts">Ngày Sinh</th>
+             <th id="hocphi">Học Phí</th>
+             <th id="an">Tiền Ăn</th>
+             <th id="kk">Khoảng Khác</th>
+             <th id="notets">Ghi Chú</th>
+             <th id="tt">Tình Trạng</th>
+             <th id="notet">Chỉnh Sửa</th>
+           </tr>
+         </thead>
+          <tbody>
+
+          </tbody>
+       </table>
+     </div>
+  </div>
+  <script>
+  var datas;
+  filePath = "./kkdata.json";
+  storage.get(filePath, (err, data) => {
+  if (err) {
+    console.error(err)
+  } else {
+    datas = data;
+    for(var i = 0; i<=datas.length; i++)
+    {
+      var gts = data[i].gts;
+      if(gts == "1")
+      {
+        gts = "Đã Thu";
+      }else{
+        gts="Chưa Thu";
+      }
+      var htmls = "<tr id='tr"+i+"'>"
+      +"        <td>"+data[i].name+"</td>"
+      +"        <td>"+data[i].lops+"</td>"
+      +"        <td>"+data[i].ngaysinh+"</td>"
+      +"        <td>"+parseInt(data[i].hocphis).toLocaleString('en')+"</td>"
+      +"        <td>"+parseInt(data[i].ans).toLocaleString('en')+"</td>"
+      +"        <td>"+parseInt(data[i].khoangkhacs).toLocaleString('en')+"</td>"
+      +"        <td>"+data[i].notes+"</td>"
+      +"        <td>"+gts+"</td>"
+      +"        <td ><div><button onclick='editp("+i+")''>Edit</button><button onclick='deletea("+i+")''>Delete</button></div></td>"
+      +"      </tr>"
+  $("#tabls").append(htmls);
+    }
+  }
+});
+function filter_array(arr) {
+    var index = -1,
+        arr_length = arr ? arr.length : 0,
+        resIndex = -1,
+        result = [];
+
+    while (++index < arr_length) {
+        var value = arr[index];
+
+        if (value) {
+            result[++resIndex] = value;
+        }
+    }
+
+    return result;
+}
+function deletea(index){
+  delete datas[index];
+  datas = filter_array(datas);
+  console.log(datas);
+  storage.set(filePath, datas)
+    .then(data => {
+      console.log(datas);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+    $("#content").load("./money.html");
+}
+function editp(index){
+  const app = require('electron');
+  const { ipcRenderer } = require('electron')
+  const BrowserWindow = app.remote.BrowserWindow;
+    let editwindow;
+    editwindow = new BrowserWindow({width: 400, height: 600,experimentalFeatures: true,vibrancy: 'dark'});
+    editwindow.loadURL('file://'+__dirname+'/editmwindow.html');
+    editwindow.setAlwaysOnTop(true, "floating", 1);
+    editwindow.setVisibleOnAllWorkspaces(false);
+    editwindow.webContents.on('did-finish-load', () => {
+    editwindow.webContents.send('ping', index)
+  })
+}
+function StFil() {
+var input, filter, table, tr, td, i;
+  input = document.getElementById("myip");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("tabls");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+  </script>
+</div>

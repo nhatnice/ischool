@@ -1,0 +1,44 @@
+<form id="searchf" style="max-width:30%;padding-top:4px;float:right;padding-right:25px">
+  <div class="input-field col s6">
+        <i class="material-icons prefix" style="font-size:24px;margin-left:15px;">search</i>
+        <input id="myip" onkeyup="StFil()" type="text" class="validate" style="height:24px">
+      </div>
+</form>
+<div class="center-menu">
+  <button class="exbtn" id="addm"><i style="font-size:22px" class="material-icons">&#xE145;</i></button>
+  <button class="exbtn" id="save" onclick="save()"><i style="font-size:22px" class="material-icons">&#xE161;</i></button>
+  <button class="exbtn" id="open"><i style="font-size:22px" class="material-icons">folder_open</i></button>
+  <button class="exbtn" id="refresh" onclick="refresh('#content','./components/pages/student.html')"><i style="font-size:22px" class="material-icons">refresh</i></button>
+</div>
+<script>
+ //const compressing = require('compressing');
+// path = require("path");
+//const child_process = require('child_process');
+//const fs = require('fs');
+$("#open").click(function(){
+  const {dialog} = require('electron').remote
+  const fsx = require('fs-extra');
+  dialog.showOpenDialog({ filters: [
+     { name: '*', extensions: ['json'] }
+    ]}, function (fileName) {
+      fsx.copy(process.env.APPDATA + "/minhducschool/database.json",process.env.APPDATA + "/minhducschool/database.json.bak", err => {
+        if (err) return console.error(err)
+        console.log('remove success!')
+})
+      fsx.copy(fileName[0],process.env.APPDATA + "/minhducschool/database.json", err => {
+        if (err) return console.error(err)
+        console.log("done!");
+        $("#content").load("./components/pages/student.html");
+      })
+});
+});
+  $("#addm").click(function(){
+    const app = require('electron');
+    const BrowserWindow = app.remote.BrowserWindow;
+  let addmWindow;
+    addmWindow = new BrowserWindow({width: 1100, height: 650,icon: __dirname + '/icon.ico',title: "iManager",experimentalFeatures: true,vibrancy: 'dark'});
+    addmWindow.loadURL('file://'+__dirname+'/addmWindow.html');
+  //   addmWindow.setAlwaysOnTop(true, "floating", 1);
+     addmWindow.setVisibleOnAllWorkspaces(false);
+});
+</script>
