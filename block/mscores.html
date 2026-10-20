@@ -14,9 +14,9 @@
 <script>
   $("#adds").click(function(){
     const app = require('electron');
-    const BrowserWindow = app.remote.BrowserWindow;
+    const BrowserWindow = require('@electron/remote').BrowserWindow;
     let addmWindow;
-    addmWindow = new BrowserWindow({width: 1100, height: 650,icon: __dirname + '/icon.ico',title: "Thêm Điểm",experimentalFeatures: true,vibrancy: 'dark'});
+    addmWindow = new BrowserWindow({webPreferences: { nodeIntegration: true, contextIsolation: false }, width: 1100, height: 650,icon: __dirname + '/icon.ico',title: "Thêm Điểm"});
     addmWindow.loadURL('file://'+__dirname+'/components/pages/addScores.html');
   //   addmWindow.setAlwaysOnTop(true, "floating", 1);
      addmWindow.setVisibleOnAllWorkspaces(false);

@@ -128,9 +128,9 @@ function deletea(index){
 function editp(index){
   const app = require('electron');
   const { ipcRenderer } = require('electron')
-  const BrowserWindow = app.remote.BrowserWindow;
+  const BrowserWindow = require('@electron/remote').BrowserWindow;
     let editwindow;
-    editwindow = new BrowserWindow({width: 400, height: 600,icon: __dirname + '/icon.ico',title: "iManager",experimentalFeatures: true,vibrancy: 'dark'});
+    editwindow = new BrowserWindow({webPreferences: { nodeIntegration: true, contextIsolation: false }, width: 400, height: 600,icon: __dirname + '/icon.ico',title: "iManager"});
     editwindow.loadURL('file://'+__dirname+'/editmwindow.html');
     editwindow.setAlwaysOnTop(true, "floating", 1);
     editwindow.setVisibleOnAllWorkspaces(false);

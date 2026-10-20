@@ -26,7 +26,7 @@
     var idss;
     const electron = require('electron');
     const storage = require('electron-storage');
-    const currentWindow = electron.remote.getCurrentWindow();
+    const currentWindow = require('@electron/remote').getCurrentWindow();
     electron.ipcRenderer.on('ping', (event, ids) => {
       filePath = "./database.json";
       idss = ids;
@@ -34,9 +34,10 @@
       if (err) {
         console.error(err)
       } else {
+        var avatarSrc = './resources/icons/avatar-placeholder.svg';
         var htedit = '<div class="avatar" id="infor" style="float:left;width:20%">'
 +'          <div class="cform-avatar" id="cform-avatar">'
-+'            <img  class="cform-image" id="cform-image" src="'+process.env.APPDATA+data[ids].image+'"/>'
++'            <img class="cform-image" id="cform-image" src="'+avatarSrc+'" onerror="this.onerror=null;this.src=\'./resources/icons/avatar-placeholder.svg\'"/>'
 +'            <a onclick="upfile()" id="upfile" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">camera_alt</i></a>'
 +'          </div>'
 +'        </div>'
@@ -218,7 +219,7 @@ dts = data;
       }
     });
   });
-  const remote = require('electron').remote;
+  const remote = require('@electron/remote');
   function cancels(){
     var window = remote.getCurrentWindow();
     window.close();
@@ -226,7 +227,7 @@ dts = data;
   //ADD IMAGE
   var image;
   function upfile(){
-    const {dialog} = require('electron').remote
+    const {dialog} = require('@electron/remote')
     const path = require('path')
     const fsx = require('fs-extra');
     dialog.showOpenDialog({
@@ -235,12 +236,12 @@ dts = data;
                     extensions: ['png','jpg']
                   }
                 ]}, function (fileName) {
-                  fsx.copy(fileName[0],process.env.APPDATA + "/minhducschool/database/image/"+path.basename(fileName[0]), err => {
+                  fsx.copy(fileName[0],require('@electron/remote').app.getPath('appData') + "/minhducschool/database/image/"+path.basename(fileName[0]), err => {
                     if (err) return console.error(err)
                     console.log(fileName);
                     $("#content").load("./student.html");
                     image = "/minhducschool/database/image/"+path.basename(fileName[0]);
-                    $("#cform-image").attr("src",process.env.APPDATA+image);
+                    $("#cform-image").attr("src",require('@electron/remote').app.getPath('appData')+image);
                     })
                   });
       };

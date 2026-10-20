@@ -67,7 +67,7 @@
                         <i class="material-icons right" >close</i>
                       </button>
                       <script>
-                        const remote = require('electron').remote;
+                        const remote = require('@electron/remote');
                         $("#cancel").click(function(){
                           var window = remote.getCurrentWindow();
                           window.close();

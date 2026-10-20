@@ -16,28 +16,28 @@
 <script>
 
 $("#save").click(function(){
-  const {dialog} = require('electron').remote
+  const {dialog} = require('@electron/remote')
   const fsx = require('fs-extra');
   dialog.showSaveDialog({ filters: [
      { name: '*', extensions: ['json'] }
     ]}, function (fileName) {
-      fsx.copy(process.env.APPDATA + "/minhducschool/kkdata.json",fileName, err => {
+      fsx.copy(require('@electron/remote').app.getPath('appData') + "/minhducschool/kkdata.json",fileName, err => {
         if (err) return console.error(err)
         console.log("save done!");
       })
   });
 });
 $("#open").click(function(){
-  const {dialog} = require('electron').remote
+  const {dialog} = require('@electron/remote')
   const fsx = require('fs-extra');
   dialog.showOpenDialog({ filters: [
      { name: '*', extensions: ['json'] }
     ]}, function (fileName) {
-      fsx.copy(process.env.APPDATA + "/minhducschool/kkdata.json",process.env.APPDATA + "/minhducschool/stsdata.json.old", err => {
+      fsx.copy(require('@electron/remote').app.getPath('appData') + "/minhducschool/kkdata.json",require('@electron/remote').app.getPath('appData') + "/minhducschool/stsdata.json.old", err => {
         if (err) return console.error(err)
         console.log('remove success!')
 })
-      fsx.copy(fileName[0],process.env.APPDATA + "/minhducschool/kkdata.json", err => {
+      fsx.copy(fileName[0],require('@electron/remote').app.getPath('appData') + "/minhducschool/kkdata.json", err => {
         if (err) return console.error(err)
         console.log("done!");
         $("#content").load("./components/pages/money.html");
@@ -49,9 +49,9 @@ $("#open").click(function(){
   });
   $("#addmm").click(function(){
     const app = require('electron');
-    const BrowserWindow = app.remote.BrowserWindow;
+    const BrowserWindow = require('@electron/remote').BrowserWindow;
   let addmsWindow;
-    addmsWindow = new BrowserWindow({width: 400, height: 600,experimentalFeatures: true,vibrancy: 'dark'});
+    addmsWindow = new BrowserWindow({webPreferences: { nodeIntegration: true, contextIsolation: false }, width: 400, height: 600});
     addmsWindow.loadURL('file://'+__dirname+'/addmsWindow.html');
      addmsWindow.setAlwaysOnTop(true, "floating", 1);
      addmsWindow.setVisibleOnAllWorkspaces(false);

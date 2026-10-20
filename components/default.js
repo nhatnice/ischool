@@ -1,16 +1,10 @@
 const compressing = require('compressing');
-const path = require("path");
-const child_process = require('child_process');
+const path = require('path');
 const fs = require('fs');
 
 //SHOW CARD
 function showCard(image,name,info,icon,div_tag,click){
-  //Get card value
-  this.cardimg = image;
-  this.cardname = name;
-  this.cardinfo = info;
-  this.cardicon = icon;
-
+  const avatarPlaceholder = './resources/icons/avatar-placeholder.svg';
   //HTML
   var userCard = '<div onclick="editStudent('+click+')" class="user-card waves-effect waves-dark">'
 +'			<div class="user-img" style="background-image:url({IMAGE})">'
@@ -39,42 +33,54 @@ function showCard(image,name,info,icon,div_tag,click){
     +'</div>'
 
     //APPEND TO HTML
-    userCard = userCard.replace("{NAME}",name);
-    userCard = userCard.replace("{CLASS}",info);
-    image = image.replace(/\\/g, "\\\\");
-    userCard = userCard.replace("{IMAGE}",image);
-    userCard = userCard.replace("{ICON}",icon);
+    const card = userCards
+      .replace("{NAME}", name)
+      .replace("{CLASS}", info)
+      .replace("{IMAGE}", avatarPlaceholder)
+      .replace("{ICON}", icon);
 
-    $(div_tag).append(userCard);
+    $(div_tag).append(card);
 };
 
 //SAVE FILE FUNCTION
 
-function save(){
-  const {dialog} = require('electron').remote
+async function save() {
+  const { dialog } = require('@electron/remote');
   const fsx = require('fs-extra');
-  dialog.showSaveDialog({ filters: [
-      {
-        name: 'iSchool Database',
-        extensions: ['asx']
-      }
-     ]}, function (fileName) {
+  const appData = require('@electron/remote').app.getPath('appData');
 
-      var filenames = path.basename(fileName); //lấy tên file
-      //copy to temp
-      fsx.copy(process.env.APPDATA + "/minhducschool/database.json",process.env.APPDATA + "/minhducschool/temp/database.json");
-      fsx.copy(process.env.APPDATA + "/minhducschool/database.json.bak",process.env.APPDATA + "/minhducschool/temp/database.json.bak");
-      fsx.copy(process.env.APPDATA + "/minhducschool/information.json",process.env.APPDATA + "/minhducschool/temp/information.json");
-      fsx.copy(process.env.APPDATA + "/minhducschool/database",process.env.APPDATA + "/minhducschool/temp/database");
-      //compress
-      compressing.tar.compressDir(process.env.APPDATA + "/minhducschool/temp", fileName)
-      .then()
-      .catch();
-      //copy to location
-      console.log(filenames);
-      console.log(fileName);
+  if (!appData) {
+    console.error('Cannot locate the application data directory.');
+    return;
+  }
+
+  const result = await dialog.showSaveDialog({
+    filters: [{ name: 'iSchool Database', extensions: ['asx'] }]
   });
-};
+  const fileName = typeof result === 'string' ? result : result.filePath;
+  if (!fileName) return;
+
+  const dataDir = path.join(appData, 'minhducschool');
+  const tempDir = path.join(dataDir, 'temp');
+  const entries = ['database.json', 'database.json.bak', 'information.json', 'database'];
+
+  try {
+    await fsx.ensureDir(tempDir);
+    for (const entry of entries) {
+      const source = path.join(dataDir, entry);
+      if (await fsx.pathExists(source)) {
+        await fsx.copy(source, path.join(tempDir, entry));
+      }
+    }
+    await compressing.tar.compressDir(tempDir, fileName);
+  } catch (error) {
+    console.error('Failed to export the iSchool database:', error);
+  } finally {
+    await fsx.remove(tempDir).catch(error => {
+      console.error('Failed to clean up temporary export files:', error);
+    });
+  }
+}
 
 //REFRESH pages
 function refresh(id,file){

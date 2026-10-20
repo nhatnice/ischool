@@ -16,16 +16,16 @@
 //const child_process = require('child_process');
 //const fs = require('fs');
 $("#open").click(function(){
-  const {dialog} = require('electron').remote
+  const {dialog} = require('@electron/remote')
   const fsx = require('fs-extra');
   dialog.showOpenDialog({ filters: [
      { name: '*', extensions: ['json'] }
     ]}, function (fileName) {
-      fsx.copy(process.env.APPDATA + "/minhducschool/database.json",process.env.APPDATA + "/minhducschool/database.json.bak", err => {
+      fsx.copy(require('@electron/remote').app.getPath('appData') + "/minhducschool/database.json",require('@electron/remote').app.getPath('appData') + "/minhducschool/database.json.bak", err => {
         if (err) return console.error(err)
         console.log('remove success!')
 })
-      fsx.copy(fileName[0],process.env.APPDATA + "/minhducschool/database.json", err => {
+      fsx.copy(fileName[0],require('@electron/remote').app.getPath('appData') + "/minhducschool/database.json", err => {
         if (err) return console.error(err)
         console.log("done!");
         $("#content").load("./components/pages/student.html");
@@ -34,9 +34,9 @@ $("#open").click(function(){
 });
   $("#addm").click(function(){
     const app = require('electron');
-    const BrowserWindow = app.remote.BrowserWindow;
+    const BrowserWindow = require('@electron/remote').BrowserWindow;
   let addmWindow;
-    addmWindow = new BrowserWindow({width: 1100, height: 650,icon: __dirname + '/icon.ico',title: "iManager",experimentalFeatures: true,vibrancy: 'dark'});
+    addmWindow = new BrowserWindow({webPreferences: { nodeIntegration: true, contextIsolation: false }, width: 1100, height: 650,icon: __dirname + '/icon.ico',title: "iManager"});
     addmWindow.loadURL('file://'+__dirname+'/addmWindow.html');
   //   addmWindow.setAlwaysOnTop(true, "floating", 1);
      addmWindow.setVisibleOnAllWorkspaces(false);

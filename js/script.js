@@ -1,3 +1,17 @@
+const electronRemote = require('@electron/remote');
+require('electron').remote = electronRemote;
+const nativeDialog = electronRemote.dialog;
+const showOpenDialog = nativeDialog.showOpenDialog.bind(nativeDialog);
+const showSaveDialog = nativeDialog.showSaveDialog.bind(nativeDialog);
+nativeDialog.showOpenDialog = (options, callback) => showOpenDialog(options).then(result => {
+  if (callback) callback(result.canceled ? [] : result.filePaths);
+  return result;
+});
+nativeDialog.showSaveDialog = (options, callback) => showSaveDialog(options).then(result => {
+  if (callback) callback(result.canceled ? undefined : result.filePath);
+  return result;
+});
+
 $(document).ready(function(){
   var isC = false;
   $(".menubtn").click(function(){
@@ -23,9 +37,9 @@ $(document).ready(function(){
 function editStudent(index){
   const app = require('electron');
   const { ipcRenderer } = require('electron')
-  const BrowserWindow = app.remote.BrowserWindow;
+  const BrowserWindow = require('@electron/remote').BrowserWindow;
     let editwindow;
-    editwindow = new BrowserWindow({width: 1000, height: 615,icon: __dirname + '/icon.ico',title: "iManager",experimentalFeatures: true,transparent: true,frame: false});
+    editwindow = new BrowserWindow({webPreferences: { nodeIntegration: true, contextIsolation: false }, width: 1000, height: 615,icon: __dirname + '/icon.ico',title: "iManager",transparent: true,frame: false});
     editwindow.loadURL('file://'+__dirname+'/editswindow.html');
     //editwindow.setAlwaysOnTop(true, "floating", 1);
     editwindow.setVisibleOnAllWorkspaces(false);

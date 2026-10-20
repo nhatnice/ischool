@@ -60,7 +60,7 @@ $(document).scroll(function () {
       +"        <td>"+data[i].notes+"</td>"
       +"        <td ><div><button style='background-color:transparent;border:none;outline:none' onclick='editp("+i+")''><i class='material-icons prefix' style='font-size:18px;float:left;color:#1d89cf'>mode_edit</i></button><button style='background-color:transparent;border:none;outline:none;margin-left:10px;' onclick='deletea("+i+")''><i class='material-icons prefix' style='font-size:18px;float:left;color:#ee6e73'>delete</i></button></div></td>"
       +"      </tr>"*/
-      showCard(process.env.APPDATA + data[i].image,data[i].name,data[i].lops,"bookmark_border","#fcontent",i);
+      showCard(require('@electron/remote').app.getPath('appData') + data[i].image,data[i].name,data[i].lops,"bookmark_border","#fcontent",i);
 
     }
   }

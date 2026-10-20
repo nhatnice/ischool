@@ -22,7 +22,7 @@
     var idss;
     const electron = require('electron');
     const storage = require('electron-storage');
-    const currentWindow = electron.remote.getCurrentWindow();
+    const currentWindow = require('@electron/remote').getCurrentWindow();
     electron.ipcRenderer.on('ping', (event, ids) => {
       filePath = "./kkdata.json";
       idss = ids;
@@ -85,7 +85,7 @@ dts = data;
     });
   });
 
-  const remote = require('electron').remote;
+  const remote = require('@electron/remote');
   function cancel(){
     var window = remote.getCurrentWindow();
     window.close();

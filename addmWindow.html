@@ -17,7 +17,7 @@
     <form name="formaddm" class="cform" onsubmit="return false;">
       <div class="avatar" id="infor" style="float:left;width:20%">
         <div class="cform-avatar" id="cform-avatar">
-          <img class="cform-image" src="./resources/icons/avatar.jpg" id="cform-image"/>
+          <img class="cform-image" src="./resources/icons/avatar-placeholder.svg" id="cform-image" onerror="this.onerror=null;this.src='./resources/icons/avatar-placeholder.svg'"/>
           <a id="upfile" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">camera_alt</i></a>
         </div>
       </div>
@@ -124,7 +124,7 @@
                     <i class="material-icons right" >close</i>
                   </button>
                   <script>
-                    const remote = require('electron').remote;
+                    const remote = require('@electron/remote');
                     $("#cancel").click(function(){
                       var window = remote.getCurrentWindow();
                       window.close();
@@ -140,7 +140,7 @@
     //ADD IMAGE
     var image;
     $("#upfile").click(function(){
-      const {dialog} = require('electron').remote
+      const {dialog} = require('@electron/remote')
       const path = require('path')
       const fsx = require('fs-extra');
       dialog.showOpenDialog({
@@ -149,12 +149,12 @@
                       extensions: ['png','jpg']
                     }
                   ]}, function (fileName) {
-                    fsx.copy(fileName[0],process.env.APPDATA + "/minhducschool/database/image/"+path.basename(fileName[0]), err => {
+                    fsx.copy(fileName[0],require('@electron/remote').app.getPath('appData') + "/minhducschool/database/image/"+path.basename(fileName[0]), err => {
                       if (err) return console.error(err)
                       console.log(fileName);
                       $("#content").load("./student.html");
                       image = "/minhducschool/database/image/"+path.basename(fileName[0]);
-                      $("#cform-image").attr("src",process.env.APPDATA+image);
+                      $("#cform-image").attr("src",require('@electron/remote').app.getPath('appData')+image);
                       })
                     });
         });

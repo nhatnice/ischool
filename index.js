@@ -1,17 +1,34 @@
-const {app, BrowserWindow, ipcMain } = require('electron');
-const ewc = require('ewc');
+const { app, BrowserWindow } = require('electron');
+const remoteMain = require('@electron/remote/main');
+
+remoteMain.initialize();
+app.on('browser-window-created', (_event, window) => {
+    remoteMain.enable(window.webContents);
+});
 
 let mainWindow;
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
-width: 1280, height: 720,transparent: true,frame: false,webPreferences:{experimentalFeatures:true},backgroundColor: '#00000000',show: false,
+width: 1280,
+        height: 720,
+        transparent: true,
+        frame: false,
+        backgroundColor: '#00000000',
+        show: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        },
     });
 
-    mainWindow.loadURL(`file://${__dirname}/main.html`);
-    mainWindow.webContents.openDevTools({mode: 'detach'})
-    ewc.setAcrylic(mainWindow, 0x14800020);
-    //ewc.setBlurBehind(mainWindow, 0x14800020);
-    mainWindow.on('ready-to-show', () => {
+
+    mainWindow.loadFile('main.html');
+
+
+    mainWindow.once('ready-to-show', () => {
         mainWindow.show();
+    });
+    mainWindow.on('closed', () => {
+        mainWindow = null;
     });
 });
